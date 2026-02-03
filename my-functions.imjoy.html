@@ -1,17 +1,18 @@
-<html>
-<manifest>
+<config lang="json">
 {
   "name": "MyCustomFunction",
-  "type": "window",
+  "type": "web-worker",
   "tags": ["javascript"],
   "ui": "Esegui la mia funzione custom",
   "version": "0.1.0",
-  "api_version": "0.1.7",
+  "api_version": "0.1.8",
   "description": "Plugin con la mia funzione JS custom",
   "author": "Il tuo nome",
-  "license": "MIT"
+  "license": "MIT",
+  "requirements": [],
+  "dependencies": []
 }
-</manifest>
+</config>
 
 <script lang="javascript">
 class ImJoyPlugin {
@@ -30,4 +31,3 @@ class ImJoyPlugin {
 }
 api.export(new ImJoyPlugin());
 </script>
-</html>
