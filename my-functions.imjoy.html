@@ -1,0 +1,33 @@
+<html>
+<manifest>
+{
+  "name": "MyCustomFunction",
+  "type": "window",
+  "tags": ["javascript"],
+  "ui": "Esegui la mia funzione custom",
+  "version": "0.1.0",
+  "api_version": "0.1.7",
+  "description": "Plugin con la mia funzione JS custom",
+  "author": "Il tuo nome",
+  "license": "MIT"
+}
+</manifest>
+
+<script lang="javascript">
+class ImJoyPlugin {
+  async setup() {
+    api.log('Plugin inizializzato');
+  }
+  async run(ctx) {
+    // Qui inserisci la tua funzione JS custom
+    // Esempio: una funzione semplice
+    function miaFunzioneCustom() {
+      return "Ciao dal mio plugin custom!";
+    }
+    const risultato = miaFunzioneCustom();
+    api.alert(risultato);  // Mostra il risultato in un alert
+  }
+}
+api.export(new ImJoyPlugin());
+</script>
+</html>
