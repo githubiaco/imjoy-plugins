@@ -2,40 +2,46 @@
 <html lang="it">
 <head>
   <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Image Analysis Lab</title>
   <script src="https://lib.imjoy.io/imjoy-loader.js"></script>
 </head>
 
 <body>
   <h3>Image Analysis Lab</h3>
-  <div id="imjoy-container" style="height: 500px; border: 1px solid #ccc;"></div>
+  <div id="imjoy" style="width: 100%; height: 600px;"></div>
 
   <script>
     window.onload = async () => {
-  try {
-    // Carica l'applicazione ImJoy Core
-    const imjoy = await imjoyLoader.loadImJoy({
-      config: {
-        theme: "light",
-        full_screen: false
-      }
-    });
+      try {
+        // Tentativo di caricamento usando il pattern universale
+        // Se imjoyLoader.loadImJoy non esiste, proviamo a chiamare direttamente loadImJoy
+        const loader = window.imjoyLoader || {};
+        const loadFn = loader.loadImJoy || window.loadImJoy;
 
-    // Inizializza e avvia il container con i plugin
-    await imjoy.start({
-      container: "#imjoy",
-      menu_style: { position: "top" },
-      plugins: [
-        "plugins/analysis.imjoy.html"
-      ]
-    });
-    
-    console.log("ImJoy caricato con successo!");
-  } catch (e) {
-    console.error("Errore nel caricamento di ImJoy:", e);
-  }
-};
+        if (typeof loadFn !== 'function') {
+          throw new Error("ImJoy Loader non è stato caricato correttamente o l'API è cambiata.");
+        }
+
+        const imjoy = await loadFn({
+          config: {
+            theme: "light"
+          }
+        });
+
+        await imjoy.start({
+          container: "#imjoy",
+          menu_style: { position: "top" },
+          plugins: [
+            "plugins/analysis.imjoy.html"
+          ]
+        });
+
+        console.log("ImJoy avviato con successo");
+      } catch (e) {
+        console.error("Errore critico:", e);
+        document.body.innerHTML += `<p style="color:red">Errore: ${e.message}</p>`;
+      }
+    };
   </script>
 </body>
 </html>
