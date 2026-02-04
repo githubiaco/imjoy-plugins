@@ -4,20 +4,22 @@
   <meta charset="utf-8">
   <title>Image Analysis Lab</title>
   <script src="https://lib.imjoy.io/imjoy-loader.js"></script>
-  <script>
-  imjoyLoader.init({
-    container: "#imjoy",
-    plugins: [
-      "plugins/analysis.imjoy.html"
-    ]
-  });
-  </script>
 </head>
 
 <body>
 <h3>Image Analysis Lab</h3>
 <div id="imjoy"></div>
-
+<script>
+    window.onload = () => {
+      imjoyLoader.init({
+        container: "#imjoy",
+        menu_style: { position: "top" },
+        plugins: [
+          "plugins/analysis.imjoy.html"
+        ]
+      });
+    };
+  </script>
 </body>
 </html>
 
