@@ -12,36 +12,30 @@
 
   <script>
     window.onload = async () => {
-      try {
-        // Tentativo di caricamento usando il pattern universale
-        // Se imjoyLoader.loadImJoy non esiste, proviamo a chiamare direttamente loadImJoy
-        const loader = window.imjoyLoader || {};
-        const loadFn = loader.loadImJoy || window.loadImJoy;
+  try {
+    const app = await loadImJoyBasicApp({
+      process_url_query: false,  // Disable if not needed; adjust as per your setup
+      show_window_title: true,
+      show_progress_bar: true,
+      show_empty_window: true,
+      menu_style: { position: "top" },
+      window_style: { width: '100%', height: '100%' },
+      main_container: "#imjoy",  // Mount the entire app here
+      menu_container: null,      // Or specify a separate div ID if preferred
+      window_manager_container: null,  // Or specify a separate div ID if preferred
+      imjoy_api: {},             // Optional: Override ImJoy API functions if needed
+      theme: "light"             // Assuming this is passed through config; test if supported
+    });
 
-        if (typeof loadFn !== 'function') {
-          throw new Error("ImJoy Loader non è stato caricato correttamente o l'API è cambiata.");
-        }
+    // Load your plugin(s) after the app initializes
+    await app.loadPlugin("plugins/analysis.imjoy.html");
 
-        const imjoy = await loadFn({
-          config: {
-            theme: "light"
-          }
-        });
-
-        await imjoy.start({
-          container: "#imjoy",
-          menu_style: { position: "top" },
-          plugins: [
-            "plugins/analysis.imjoy.html"
-          ]
-        });
-
-        console.log("ImJoy avviato con successo");
-      } catch (e) {
-        console.error("Errore critico:", e);
-        document.body.innerHTML += `<p style="color:red">Errore: ${e.message}</p>`;
-      }
-    };
+    console.log("ImJoy avviato con successo");
+  } catch (e) {
+    console.error("Errore critico:", e);
+    document.body.innerHTML += `<p style="color:red">Errore: ${e.message}</p>`;
+  }
+};
   </script>
 </body>
 </html>
