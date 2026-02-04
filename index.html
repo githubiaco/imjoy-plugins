@@ -8,7 +8,7 @@
   <style>
     body { margin: 0; padding: 10px; font-family: Arial, sans-serif; }
     #imjoy-menu { height: 40px; border-bottom: 1px solid #ccc; background: #f8f8f8; }
-    #imjoy-windows { height: 500px; border: 1px solid #ccc; margin-top: 10px; }
+    #imjoy-windows { height: auto; border: 1px solid #ccc; margin-top: 10px; } /* Changed to 'auto' to avoid modal warning */
   </style>
 </head>
 <body>
@@ -27,8 +27,8 @@
           process_url_query: false,
           show_window_title: true,
           show_progress_bar: true,
-          show_empty_window: true,
-          hide_about_imjoy: false,           // opzionale
+          show_empty_window: false,  // Disable empty window to avoid modal issues
+          hide_about_imjoy: false,
           menu_style: { 
             position: "absolute", 
             right: "10px", 
@@ -37,7 +37,7 @@
           },
           window_style: { width: '100%', height: '100%' },
           
-          // Configurazione corretta con container separati
+          // Configurazione con container separati
           main_container: null,
           menu_container: "imjoy-menu",
           window_manager_container: "imjoy-windows",
@@ -46,8 +46,9 @@
           theme: "light"
         });
 
-        // Carica il tuo plugin
-        await app.loadPlugin("plugins/analysis.imjoy.html");
+        // Carica il plugin con URL assoluto (risolve l'errore di repository)
+        const pluginUrl = location.origin + "/plugins/analysis.imjoy.html";
+        await app.loadPlugin(pluginUrl);
 
         console.log("✅ ImJoy avviato con successo");
       } catch (e) {
