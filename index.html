@@ -1,33 +1,20 @@
-<!DOCTYPE html>
-<html lang="it">
-<head>
-  <meta charset="utf-8">
-  <title>Image Analysis Lab</title>
-  <script src="https://lib.imjoy.io/imjoy-loader.js"></script>
-</head>
-
-<body>
-  <h3>Image Analysis Lab</h3>
-  <div id="imjoy" style="width: 100%; height: 600px;"></div>
-
-  <script>
-    window.onload = async () => {
+window.onload = async () => {
   try {
     const app = await loadImJoyBasicApp({
-      process_url_query: false,  // Disable if not needed; adjust as per your setup
+      process_url_query: false,  // Disable if not processing URL params
       show_window_title: true,
       show_progress_bar: true,
       show_empty_window: true,
-      menu_style: { position: "top" },
+      menu_style: { position: "top", right: 0, top: "2px" },  // Adjusted for visibility
       window_style: { width: '100%', height: '100%' },
-      main_container: "#imjoy",  // Mount the entire app here
-      menu_container: null,      // Or specify a separate div ID if preferred
-      window_manager_container: null,  // Or specify a separate div ID if preferred
-      imjoy_api: {},             // Optional: Override ImJoy API functions if needed
-      theme: "light"             // Assuming this is passed through config; test if supported
+      main_container: "#imjoy",  // Use #imjoy for both menu and windows
+      menu_container: null,      // Not needed if using main_container
+      window_manager_container: null,  // Not needed if using main_container
+      imjoy_api: {},             // Optional API overrides
+      theme: "light"             // Light theme as originally intended
     });
 
-    // Load your plugin(s) after the app initializes
+    // Load your plugin after app init
     await app.loadPlugin("plugins/analysis.imjoy.html");
 
     console.log("ImJoy avviato con successo");
@@ -36,6 +23,3 @@
     document.body.innerHTML += `<p style="color:red">Errore: ${e.message}</p>`;
   }
 };
-  </script>
-</body>
-</html>
