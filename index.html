@@ -1,25 +1,41 @@
 <!DOCTYPE html>
-<html>
+<html lang="it">
 <head>
   <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Image Analysis Lab</title>
   <script src="https://lib.imjoy.io/imjoy-loader.js"></script>
 </head>
 
 <body>
-<h3>Image Analysis Lab</h3>
-<div id="imjoy"></div>
-<script>
-    window.onload = () => {
-      imjoyLoader.init({
-        container: "#imjoy",
-        menu_style: { position: "top" },
-        plugins: [
-          "plugins/analysis.imjoy.html"
-        ]
-      });
-    };
+  <h3>Image Analysis Lab</h3>
+  <div id="imjoy-container" style="height: 500px; border: 1px solid #ccc;"></div>
+
+  <script>
+    // Utilizzo di una funzione async per gestire meglio il caricamento
+    async function setupImJoy() {
+      try {
+        const imjoy = await imjoyLoader.loadImJoy({
+          config: {
+            theme: "light",
+            full_screen: false
+          }
+        });
+        
+        await imjoy.start({
+          container: "#imjoy-container",
+          menu_style: { position: "top" },
+          plugins: [
+            "plugins/analysis.imjoy.html"
+          ]
+        });
+        console.log("ImJoy inizializzato correttamente");
+      } catch (e) {
+        console.error("Errore durante l'inizializzazione di ImJoy:", e);
+      }
+    }
+
+    window.addEventListener('load', setupImJoy);
   </script>
 </body>
 </html>
-
