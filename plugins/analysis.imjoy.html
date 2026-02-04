@@ -2,16 +2,26 @@
 {
   "name": "OpenCV Analysis Tools",
   "type": "web",
-  "ui": true
+  "ui": true,
+  "requirements": [
+    "https://docs.opencv.org/4.x/opencv.js"
+  ],
+  "dependencies": [
+    "https://ij.imjoy.io" 
+  ]
 }
 </plugin>
-<script>
+
+<script lang="javascript">
 class ImJoyPlugin {
   async setup() {
-    // collega ImageJ
-    this.ij = await api.getImageJ();
+    // Attendi che OpenCV sia pronto (importante!)
+    if (cv instanceof Promise) await cv;
+    
+    // Recupera l'interfaccia di ImageJ.JS
+    // Nota: Assicurati che ImageJ.JS sia aperto nel tuo spazio di lavoro
+    this.ij = await api.getPlugin("ImageJ.JS");
 
-    // crea menu custom
     api.registerMenuItem({
       label: "Iaco ▸ Gaussian Blur",
       callback: () => this.gaussianBlur()
@@ -26,41 +36,41 @@ class ImJoyPlugin {
       label: "Iaco ▸ Mostra Tools",
       callback: () => this.showTools()
     });
-    
   }
+
   async showTools() {
-    api.showDialog({
-      title: "OpenCV Tools",
+    // Nel 2026, api.showDialog richiede un oggetto strutturato
+    await api.showDialog({
+      name: "OpenCV Tools",
       content: `
-        <button id="blur">Gaussian Blur</button>
-        <button id="edges">Edges</button>
+        <div style="padding: 10px;">
+          <button id="blur" style="margin-bottom: 5px;">Gaussian Blur</button><br>
+          <button id="edges">Edges (Canny)</button>
+        </div>
       `
     });
 
-    // qui colleghi i pulsanti
-    document.getElementById("blur").onclick = () => this.gaussianBlur();
-    document.getElementById("edges").onclick = () => this.edgeDetection();
+    // Timeout minimo per assicurarsi che il DOM del dialogo sia pronto
+    setTimeout(() => {
+        document.getElementById("blur").onclick = () => this.gaussianBlur();
+        document.getElementById("edges").onclick = () => this.edgeDetection();
+    }, 100);
   }
-  
+
   async gaussianBlur() {
     const img = await this.ij.getCurrentImage();
     const pixels = await img.getPixels();
 
-    let mat = cv.matFromArray(
-      img.height,
-      img.width,
-      cv.CV_8UC1,
-      pixels
-    );
-
+    let mat = cv.matFromArray(img.height, img.width, cv.CV_8UC1, pixels);
     let dst = new cv.Mat();
-    cv.GaussianBlur(mat, dst, new cv.Size(5,5), 0);
+    
+    cv.GaussianBlur(mat, dst, new cv.Size(5, 5), 0);
 
     await this.ij.showImage({
       data: dst.data,
       width: img.width,
       height: img.height,
-      name: "Gaussian Blur"
+      name: "Gaussian Blur Result"
     });
 
     mat.delete();
@@ -71,21 +81,16 @@ class ImJoyPlugin {
     const img = await this.ij.getCurrentImage();
     const pixels = await img.getPixels();
 
-    let src = cv.matFromArray(
-      img.height,
-      img.width,
-      cv.CV_8UC1,
-      pixels
-    );
-
+    let src = cv.matFromArray(img.height, img.width, cv.CV_8UC1, pixels);
     let edges = new cv.Mat();
+    
     cv.Canny(src, edges, 50, 150);
 
     await this.ij.showImage({
       data: edges.data,
       width: img.width,
       height: img.height,
-      name: "Edges"
+      name: "Canny Edges"
     });
 
     src.delete();
