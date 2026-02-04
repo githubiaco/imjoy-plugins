@@ -12,30 +12,30 @@
   <div id="imjoy-container" style="height: 500px; border: 1px solid #ccc;"></div>
 
   <script>
-    // Utilizzo di una funzione async per gestire meglio il caricamento
-    async function setupImJoy() {
-      try {
-        const imjoy = await imjoyLoader.loadImJoy({
-          config: {
-            theme: "light",
-            full_screen: false
-          }
-        });
-        
-        await imjoy.start({
-          container: "#imjoy-container",
-          menu_style: { position: "top" },
-          plugins: [
-            "plugins/analysis.imjoy.html"
-          ]
-        });
-        console.log("ImJoy inizializzato correttamente");
-      } catch (e) {
-        console.error("Errore durante l'inizializzazione di ImJoy:", e);
+    window.onload = async () => {
+  try {
+    // Carica l'applicazione ImJoy Core
+    const imjoy = await imjoyLoader.loadImJoy({
+      config: {
+        theme: "light",
+        full_screen: false
       }
-    }
+    });
 
-    window.addEventListener('load', setupImJoy);
+    // Inizializza e avvia il container con i plugin
+    await imjoy.start({
+      container: "#imjoy",
+      menu_style: { position: "top" },
+      plugins: [
+        "plugins/analysis.imjoy.html"
+      ]
+    });
+    
+    console.log("ImJoy caricato con successo!");
+  } catch (e) {
+    console.error("Errore nel caricamento di ImJoy:", e);
+  }
+};
   </script>
 </body>
 </html>
