@@ -1,0 +1,97 @@
+<plugin>
+{
+  "name": "OpenCV Analysis Tools",
+  "type": "web",
+  "ui": true
+}
+</plugin>
+<script>
+class ImJoyPlugin {
+  async setup() {
+    // collega ImageJ
+    this.ij = await api.getImageJ();
+
+    // crea menu custom
+    api.registerMenuItem({
+      label: "Iaco ▸ Gaussian Blur",
+      callback: () => this.gaussianBlur()
+    });
+
+    api.registerMenuItem({
+      label: "Iaco ▸ Edge Detection",
+      callback: () => this.edgeDetection()
+    });
+
+    api.registerMenuItem({
+      label: "Iaco ▸ Mostra Tools",
+      callback: () => this.showTools()
+    });
+    
+  }
+  async showTools() {
+    api.showDialog({
+      title: "OpenCV Tools",
+      content: `
+        <button id="blur">Gaussian Blur</button>
+        <button id="edges">Edges</button>
+      `
+    });
+
+    // qui colleghi i pulsanti
+    document.getElementById("blur").onclick = () => this.gaussianBlur();
+    document.getElementById("edges").onclick = () => this.edgeDetection();
+  }
+  
+  async gaussianBlur() {
+    const img = await this.ij.getCurrentImage();
+    const pixels = await img.getPixels();
+
+    let mat = cv.matFromArray(
+      img.height,
+      img.width,
+      cv.CV_8UC1,
+      pixels
+    );
+
+    let dst = new cv.Mat();
+    cv.GaussianBlur(mat, dst, new cv.Size(5,5), 0);
+
+    await this.ij.showImage({
+      data: dst.data,
+      width: img.width,
+      height: img.height,
+      name: "Gaussian Blur"
+    });
+
+    mat.delete();
+    dst.delete();
+  }
+
+  async edgeDetection() {
+    const img = await this.ij.getCurrentImage();
+    const pixels = await img.getPixels();
+
+    let src = cv.matFromArray(
+      img.height,
+      img.width,
+      cv.CV_8UC1,
+      pixels
+    );
+
+    let edges = new cv.Mat();
+    cv.Canny(src, edges, 50, 150);
+
+    await this.ij.showImage({
+      data: edges.data,
+      width: img.width,
+      height: img.height,
+      name: "Edges"
+    });
+
+    src.delete();
+    edges.delete();
+  }
+}
+
+api.export(new ImJoyPlugin());
+</script>
